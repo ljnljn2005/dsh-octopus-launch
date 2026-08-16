@@ -44,6 +44,18 @@ profile 的 `cordis.patch.yml` 中启用（**`binaryPath` 必填，按你的环�
 | `confirmDelayMs` | number | `1500` | 启动后等待确认的毫秒数；0 = 不确认 |
 | `recheckDelayMs` | number | `300` | 启动前二次检测间隔（毫秒） |
 
+## 数据库手动清理（可选）
+
+octopus 会把每次转发的完整请求体存入 `data/data.db` 的 `relay_logs` 表，长期运行可能涨到十几 GB。仓库内附带手动清理脚本，放在 octopus 目录下执行即可（会自动停止 → 清理 → 重启 octopus）：
+
+```sh
+cd /mnt/d/Programs/octopus
+./cleanup.sh          # 保留最近 1000 条 relay_logs + VACUUM + 删迁移备份
+./cleanup.sh 5000     # 保留最近 5000 条
+./cleanup.sh 0        # 全部清空 relay_logs
+RESTART=0 ./cleanup.sh 1000   # 清理后不自动重启
+```
+
 ## 本地测试
 
 ```sh
