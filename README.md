@@ -16,12 +16,11 @@ DSH（DeepSeek Harness）插件：**dsh 启动时自动在后台拉起外部程�
 ## 安装
 
 ```sh
-dsh plugin --profile web add file:/root/dshplugins/dsh-octopus-launch        # 本地开发
-# 或从 GitHub（发布后）
 dsh plugin --profile web add github:ljnljn2005/dsh-octopus-launch
+dsh plugin --profile headless add github:ljnljn2005/dsh-octopus-launch   # 可选
 ```
 
-profile 的 `cordis.patch.yml` 中启用：
+profile 的 `cordis.patch.yml` 中启用（**`binaryPath` 必填，按你的环境填写**）：
 
 ```yaml
 - insert:
@@ -37,7 +36,7 @@ profile 的 `cordis.patch.yml` 中启用：
 
 | 字段 | 类型 | 默认 | 说明 |
 |---|---|---|---|
-| `binaryPath` | string | `/mnt/d/Programs/octopus/octopus` | 要拉起的可执行文件绝对路径 |
+| `binaryPath` | string | **必填** | 要拉起的可执行文件绝对路径（按自己环境填） |
 | `args` | string[] | `["start"]` | 启动参数 |
 | `detectCommand` | string | `pgrep -x <二进制名>` | 检测进程是否已运行的命令 |
 | `logFile` | string | `<二进制目录>/<名>.dsh.log` | 启动日志输出文件 |
