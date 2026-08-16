@@ -1,0 +1,34 @@
+{
+  "name": "dsh-octopus-launch",
+  "description": "DSH plugin: launch a background process (e.g. octopus LLM gateway) automatically when dsh starts. Idempotent: skips if already running.",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljnljn2005/dsh-octopus-launch.git"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "plugin",
+    "octopus",
+    "launch",
+    "background",
+    "autostart"
+  ],
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.1"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1"
+  }
+}
