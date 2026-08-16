@@ -46,15 +46,16 @@ profile 的 `cordis.patch.yml` 中启用（**`binaryPath` 必填，按你的环�
 
 ## 数据库手动清理（可选）
 
-octopus 会把每次转发的完整请求体存入 `data/data.db` 的 `relay_logs` 表，长期运行可能涨到十几 GB。仓库内附带手动清理脚本，放在 octopus 目录下执行即可（会自动停止 → 清理 → 重启 octopus）：
+octopus 会把每次转发的完整请求体存入 `data/data.db` 的 `relay_logs` 表，长期运行可能涨到十几 GB。仓库内附带安全清理脚本 `cleanup.sh`（**重建策略**，非 DELETE+VACUUM——后者在大库上中断会导致 SQLite 文件损坏），放在 octopus 目录下执行即可：
 
 ```sh
 cd /mnt/d/Programs/octopus
-./cleanup.sh          # 保留最近 1000 条 relay_logs + VACUUM + 删迁移备份
-./cleanup.sh 5000     # 保留最近 5000 条
-./cleanup.sh 0        # 全部清空 relay_logs
-RESTART=0 ./cleanup.sh 1000   # 清理后不自动重启
+./cleanup.sh              # 默认：清空 relay_logs，保留 1 个备份
+./cleanup.sh --keep=3     # 保留最近 3 个备份
+RESTART=0 ./cleanup.sh    # 清理后不重启 octopus
 ```
+
+执行流程：停止 octopus → 原库 mv 备份为 `data/data.db.bak.<时间戳>`（零风险回退点）→ 复制完整 schema + 全部配置/统计表数据（`relay_logs` 建空表）→ `PRAGMA integrity_check` 验证 → 失败自动回滚 → 新库就位 → 重启。配置数据（渠道/API Key/价格）永远保留，只有转发日志被清空。
 
 ## 本地测试
 
